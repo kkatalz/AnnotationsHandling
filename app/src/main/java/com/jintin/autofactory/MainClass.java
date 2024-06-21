@@ -7,5 +7,9 @@ public class MainClass {
 
         Animal elephant = AnimalFactory.createAnimal(AnimalTags.ELEPHANT);
         System.out.println(elephant.makeSound()); // Output: trumpet
+
+//        Animal monkey = AnimalFactory.createAnimal("MONKEY");
+//        System.out.println(monkey.makeSound()); // Output: error
+
     }
 }
