@@ -1,23 +1,21 @@
 package com.jintin.autofactory;
 
+import com.jintin.autofactory.ElementInfo;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-
+import javax.annotation.processing.Filer;
+import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.processing.Filer;
-import javax.lang.model.element.Modifier;
+class ZooFactoryBuilder {
+    private final Filer filer;
+    private final Map<ClassName, List<ElementInfo>> input;
 
-
-class FactoryBuilder {
-    private Filer filer;
-    private Map<ClassName, List<ElementInfo>> input;
-
-    FactoryBuilder(Filer filer, Map<ClassName, List<ElementInfo>> input) {
+    ZooFactoryBuilder(Filer filer, Map<ClassName, List<ElementInfo>> input) {
         this.filer = filer;
         this.input = input;
     }
@@ -35,16 +33,15 @@ class FactoryBuilder {
 
             methodBuilder
                     .endControlFlow()
-                    .addStatement("throw new RuntimeException(\"not support type\")")
+                    .addStatement("throw new RuntimeException(\"Unsupported type: \" + type)")
                     .returns(key);
             MethodSpec methodSpec = methodBuilder.build();
-            TypeSpec helloWorld = TypeSpec.classBuilder(key.simpleName() + "Factory")
+            TypeSpec factoryClass = TypeSpec.classBuilder(key.simpleName() + "Factory")
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .addMethod(methodSpec)
                     .build();
-            JavaFile javaFile = JavaFile.builder(key.packageName(), helloWorld)
+            JavaFile javaFile = JavaFile.builder(key.packageName(), factoryClass)
                     .build();
-
             javaFile.writeTo(filer);
         }
     }
