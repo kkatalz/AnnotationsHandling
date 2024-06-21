@@ -1,6 +1,6 @@
 package com.jintin.autofactory;
 
-@AutoFactory
+@ZooFactory
 public interface Animal {
-    String bark();
+    String makeSound();
 }
